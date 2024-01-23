@@ -28,7 +28,7 @@ export async function findBlocks() {
         const filePath = new URL(path, import.meta.url)
         const contents = await readFile(filePath, {encoding: 'utf8'})
         let content
-        if(contents == ""){
+        if(contents === ""){
             content = [];
         }
         else{content = JSON.parse(contents);}
@@ -53,7 +53,11 @@ export async function findBlock(partialBlock) {
  * @return {Promise<Block|null>}
  */
 export async function findLastBlock() {
-    // A coder
+    const contents = await findBlocks();
+    if (contents === []){
+        return null;
+    }
+    return contents[contents.length-1];
 }
 
 /**
@@ -68,12 +72,24 @@ export async function createBlock(contenu) {
     const nom = contenu.nom;
     const don = contenu.don;
 
+    let lastBlockString = JSON.stringify(await findLastBlock());
+
+    let hash
+    if(lastBlockString == null){
+        hash = null;
+    }
+    else{
+        hash = createHash('sha256').update(lastBlockString).digest('hex');
+    }
+
     const data = {
         id : id,
         date : date,
         nom : nom,
-        don : don
+        don : don,
+        hash : hash
     }
+
 
     const content = await findBlocks();
 
