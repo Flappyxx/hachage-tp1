@@ -2,6 +2,7 @@ import {readFile, writeFile} from 'node:fs/promises'
 import {getDate, monSecret} from "./divers.js";
 import {NotFoundError} from "./errors.js";
 import {createHash} from 'node:crypto'
+import {uuid} from "uuidv4";
 
 
 /* Chemin de stockage des blocks */
@@ -26,8 +27,12 @@ export async function findBlocks() {
     try {
         const filePath = new URL(path, import.meta.url)
         const contents = await readFile(filePath, {encoding: 'utf8'})
-        console.log(contents)
-        return JSON.parse(contents);
+        let content
+        if(contents == ""){
+            content = [];
+        }
+        else{content = JSON.parse(contents);}
+        return (content);
     }
     catch (err) {
         console.error(err.message)
@@ -57,6 +62,23 @@ export async function findLastBlock() {
  * @return {Promise<Block[]>}
  */
 export async function createBlock(contenu) {
-    // A coder
+
+    const id = uuid();
+    const date = getDate();
+    const nom = contenu.nom;
+    const don = contenu.don;
+
+    const data = {
+        id : id,
+        date : date,
+        nom : nom,
+        don : don
+    }
+
+    const content = await findBlocks();
+
+    const res = [...content,data]
+    writeFile(path,JSON.stringify(res),'utf8');
+    return res;
 }
 

@@ -9,5 +9,8 @@ export const monSecret = "";
  * @return {string}
  */
 export function getDate() {
-    // A coder
+    return new Date().toISOString().
+    replaceAll("-", '').
+    replace(/T/,'-').
+    replace(/\..+/, '')
 }
