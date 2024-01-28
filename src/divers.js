@@ -14,3 +14,4 @@ export function getDate() {
     replace(/T/,'-').
     replace(/\..+/, '')
 }
+

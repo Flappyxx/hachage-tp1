@@ -90,7 +90,6 @@ export async function createBlock(contenu) {
         hash : hash
     }
 
-
     const content = await findBlocks();
 
     const res = [...content,data]
